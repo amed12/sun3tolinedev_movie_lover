@@ -135,7 +135,7 @@ class OnWalletPage extends PageState {
 }
 
 class OnEditProfilePage extends PageState {
-  final User user;
+  final Client user;
 
   OnEditProfilePage(this.user);
 

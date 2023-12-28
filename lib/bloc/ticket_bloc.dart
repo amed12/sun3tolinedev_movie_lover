@@ -1,31 +1,27 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
-import 'package:bwa_flutix/models/models.dart';
-import 'package:bwa_flutix/services/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sun3dev_movielover/models/models.dart';
+import 'package:sun3dev_movielover/services/services.dart';
 import 'package:equatable/equatable.dart';
 
 part 'ticket_event.dart';
 part 'ticket_state.dart';
 
 class TicketBloc extends Bloc<TicketEvent, TicketState> {
-  @override
-  TicketState get initialState => TicketState([]);
+  TicketBloc() : super(TicketState([])){
 
-  @override
-  Stream<TicketState> mapEventToState(
-    TicketEvent event,
-  ) async* {
-    if(event is BuyTicket) {
+    on<BuyTicket>((event, emit) async {
       await TicketServices.saveTicket(event.userID, event.ticket);
 
       List<Ticket> tickets = state.tickets + [event.ticket];
 
-      yield TicketState(tickets);
-    } else if(event is GetTickets) {
-      List<Ticket> tickets = await TicketServices.getTickets(event.userID);
+      emit(TicketState(tickets));
+    });
 
-      yield TicketState(tickets);
-    }
+    on<GetTickets>((event, emit) async {
+     List<Ticket> tickets = await TicketServices.getTickets(event.userID);
+      emit(TicketState(tickets));
+    });
   }
 }

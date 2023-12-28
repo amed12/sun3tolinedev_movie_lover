@@ -10,7 +10,7 @@ class UserInitial extends UserState {
 }
 
 class UserLoaded extends UserState {
-  final User user;
+  final Client user;
 
   UserLoaded(this.user);
 

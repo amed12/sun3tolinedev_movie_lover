@@ -1,61 +1,63 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
-import 'package:bwa_flutix/models/models.dart';
-import 'package:bwa_flutix/services/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sun3dev_movielover/models/models.dart';
+import 'package:sun3dev_movielover/services/services.dart';
 import 'package:equatable/equatable.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
-  @override
-  UserState get initialState => UserInitial();
-
-  @override
-  Stream<UserState> mapEventToState(
-    UserEvent event,
-  ) async* {
-    if (event is LoadUser) {
-      User user = await UserServices.getUser(event.id);
-
-      yield UserLoaded(user);
-    } else if (event is SignOut) {
-      yield UserInitial();
-    } else if (event is UpdateData) {
-      User updatedUser = (state as UserLoaded)
+  UserBloc() : super(UserInitial()){
+    on<LoadUser>((event, emit) async {
+      Client user = await UserServices.getUser(event.id);
+      emit(UserLoaded(user));
+    });
+    on<SignOut>((event, emit) async {
+      emit(UserInitial());
+    });
+    
+    on<UpdateData>((event, emit) async {
+      if (state is UserLoaded) {
+      Client updatedUser = (state as UserLoaded)
           .user
           .copyWith(name: event.name, profilePicture: event.profileImage);
 
       await UserServices.updateUser(updatedUser);
 
-      yield UserLoaded(updatedUser);
-    } else if (event is TopUp) {
+      emit(UserLoaded(updatedUser));
+      }
+    });
+
+    on<TopUp>((event, emit) async {
       if (state is UserLoaded) {
         try {
-          User updatedUser = (state as UserLoaded).user.copyWith(
-              balance: (state as UserLoaded).user.balance + event.amount);
+          Client updatedUser = (state as UserLoaded).user.copyWith(
+              balance: (state as UserLoaded).user.balance! + event.amount);
 
           await UserServices.updateUser(updatedUser);
 
-          yield UserLoaded(updatedUser);
+          emit(UserLoaded(updatedUser));
         } catch (e) {
           print(e);
         }
       }
-    } else if (event is Purchase) {
+    });
+
+    on<Purchase>((event, emit) async {
       if (state is UserLoaded) {
         try {
-          User updatedUser = (state as UserLoaded).user.copyWith(
-              balance: (state as UserLoaded).user.balance - event.amount);
+          Client updatedUser = (state as UserLoaded).user.copyWith(
+              balance: (state as UserLoaded).user.balance! - event.amount);
 
           await UserServices.updateUser(updatedUser);
 
-          yield UserLoaded(updatedUser);
+          emit(UserLoaded(updatedUser));
         } catch (e) {
           print(e);
         }
       }
-    }
+    });
   }
 }

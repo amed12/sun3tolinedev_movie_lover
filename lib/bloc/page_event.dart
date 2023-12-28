@@ -130,7 +130,7 @@ class GoToWalletPage extends PageEvent {
 }
 
 class GoToEditProfilePage extends PageEvent {
-  final User user;
+  final Client user;
 
   GoToEditProfilePage(this.user);
 

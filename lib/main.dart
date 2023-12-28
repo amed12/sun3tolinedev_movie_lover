@@ -1,4 +1,4 @@
-import 'package:bwa_flutix/services/services.dart';
+import 'package:sun3dev_movielover/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamProvider.value(
       value: AuthServices.userStream,
+      initialData: null,
       child: MultiBlocProvider(
           providers: [
             BlocProvider(create: (_) => PageBloc()),
