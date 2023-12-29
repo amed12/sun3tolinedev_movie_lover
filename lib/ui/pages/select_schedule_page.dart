@@ -1,7 +1,7 @@
 part of 'pages.dart';
 
 class SelectSchedulePage extends StatefulWidget {
-  final MovieDetail movieDetail;
+  final MovieDetail? movieDetail;
 
   SelectSchedulePage(this.movieDetail);
 
@@ -10,10 +10,10 @@ class SelectSchedulePage extends StatefulWidget {
 }
 
 class _SelectSchedulePageState extends State<SelectSchedulePage> {
-  List<DateTime> dates;
-  DateTime selectedDate;
-  int selectedTime;
-  Theater selectedTheater;
+  List<DateTime>? dates;
+  DateTime? selectedDate;
+  int? selectedTime;
+  Theater? selectedTheater;
   bool isValid = false;
 
   @override
@@ -22,16 +22,15 @@ class _SelectSchedulePageState extends State<SelectSchedulePage> {
 
     dates =
         List.generate(7, (index) => DateTime.now().add(Duration(days: index)));
-    selectedDate = dates[0];
+    selectedDate = dates?[0];
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        context.bloc<PageBloc>().add(GoToMovieDetailPage(widget.movieDetail));
-
-        return;
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (_) async {
+        context.read<PageBloc>().add(GoToMovieDetailPage(widget.movieDetail));
       },
       child: Scaffold(
         body: Stack(
@@ -54,7 +53,7 @@ class _SelectSchedulePageState extends State<SelectSchedulePage> {
                       child: GestureDetector(
                         onTap: () {
                           context
-                              .bloc<PageBloc>()
+                              .read<PageBloc>()
                               .add(GoToMovieDetailPage(widget.movieDetail));
                         },
                         child: Icon(
@@ -79,19 +78,19 @@ class _SelectSchedulePageState extends State<SelectSchedulePage> {
                   height: 90,
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: dates.length,
+                      itemCount: dates?.length,
                       itemBuilder: (_, index) => Container(
                             margin: EdgeInsets.only(
                                 left: (index == 0) ? defaultMargin : 0,
-                                right: (index < dates.length - 1)
+                                right: (index < dates!.length - 1)
                                     ? 16
                                     : defaultMargin),
                             child: DateCard(
-                              dates[index],
-                              isSelected: selectedDate == dates[index],
+                              dates![index],
+                              isSelected: selectedDate == dates![index],
                               onTap: () {
                                 setState(() {
-                                  selectedDate = dates[index];
+                                  selectedDate = dates![index];
                                 });
                               },
                             ),
@@ -116,18 +115,18 @@ class _SelectSchedulePageState extends State<SelectSchedulePage> {
                           ),
                           onPressed: () {
                             if (isValid) {
-                              context.bloc<PageBloc>().add(GoToSelectSeatPage(
+                              context.read<PageBloc>().add(GoToSelectSeatPage(
                                   Ticket(
                                       widget.movieDetail,
                                       selectedTheater,
                                       DateTime(
-                                          selectedDate.year,
-                                          selectedDate.month,
-                                          selectedDate.day,
-                                          selectedTime),
+                                          selectedDate!.year,
+                                          selectedDate!.month,
+                                          selectedDate!.day,
+                                          selectedTime!),
                                       randomAlphaNumeric(12).toUpperCase(),
-                                      null,
-                                      (userState as UserLoaded).user.name,
+                                      [],
+                                      (userState as UserLoaded).user.name ?? '',
                                       null)));
                             }
                           }),
@@ -166,7 +165,7 @@ class _SelectSchedulePageState extends State<SelectSchedulePage> {
               isSelected:
                   selectedTheater == theater && selectedTime == schedule[index],
               isEnabled: schedule[index] > DateTime.now().hour ||
-                  selectedDate.day != DateTime.now().day,
+                  selectedDate?.day != DateTime.now().day,
               onTap: () {
                 setState(() {
                   selectedTheater = theater;

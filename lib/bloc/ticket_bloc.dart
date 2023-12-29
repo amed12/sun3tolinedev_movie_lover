@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sun3dev_movielover/models/models.dart';
@@ -14,7 +13,7 @@ class TicketBloc extends Bloc<TicketEvent, TicketState> {
     on<BuyTicket>((event, emit) async {
       await TicketServices.saveTicket(event.userID, event.ticket);
 
-      List<Ticket> tickets = state.tickets + [event.ticket];
+      List<Ticket?> tickets = state.tickets + [event.ticket];
 
       emit(TicketState(tickets));
     });

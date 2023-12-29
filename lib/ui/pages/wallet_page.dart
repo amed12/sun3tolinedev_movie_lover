@@ -7,11 +7,9 @@ class WalletPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        context.bloc<PageBloc>().add(pageEvent);
-
-        return;
+    return PopScope(
+      onPopInvoked: (_) async {
+        context.read<PageBloc>().add(pageEvent);
       },
       child: Scaffold(
         body: Stack(
@@ -35,7 +33,7 @@ class WalletPage extends StatelessWidget {
                           padding: EdgeInsets.only(top: 20),
                           child: GestureDetector(
                             onTap: () {
-                              context.bloc<PageBloc>().add(pageEvent);
+                              context.read<PageBloc>().add(pageEvent);
                             },
                             child: Icon(Icons.arrow_back, color: Colors.black),
                           ),
@@ -146,7 +144,7 @@ class WalletPage extends StatelessWidget {
                                                         (userState
                                                                 as UserLoaded)
                                                             .user
-                                                            .name,
+                                                            .name ?? '',
                                                         style: whiteTextFont
                                                             .copyWith(
                                                                 fontSize: 12),
@@ -230,7 +228,7 @@ class WalletPage extends StatelessWidget {
                                   builder: (_, snapshot) {
                                     if (snapshot.hasData) {
                                       return generateTransactionList(
-                                          snapshot.data,
+                                          snapshot.data as List<FlutixTransaction>,
                                           MediaQuery.of(context).size.width -
                                               2 * defaultMargin);
                                     } else {
@@ -259,18 +257,20 @@ class WalletPage extends StatelessWidget {
                 width: 250,
                 height: 46,
                 margin: EdgeInsets.only(bottom: 30),
-                child: RaisedButton(
-                    elevation: 0,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
-                    color: mainColor,
+                    backgroundColor: mainColor,
+                    ),
                     child: Text(
                       "Top Up My Wallet",
                       style: whiteTextFont.copyWith(fontSize: 16),
                     ),
                     onPressed: () {
                       context
-                          .bloc<PageBloc>()
+                          .read<PageBloc>()
                           .add(GoToTopUpPage(GoToWalletPage(pageEvent)));
                     }),
               ),

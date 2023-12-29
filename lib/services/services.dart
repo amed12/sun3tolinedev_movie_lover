@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:bwa_flutix/models/models.dart';
-import 'package:bwa_flutix/shared/shared.dart';
+import 'package:sun3dev_movielover/extensions/extensions.dart';
+import 'package:sun3dev_movielover/models/models.dart';
+import 'package:sun3dev_movielover/shared/shared.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;

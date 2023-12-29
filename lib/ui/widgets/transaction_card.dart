@@ -19,8 +19,8 @@ class TransactionCard extends StatelessWidget {
               image: DecorationImage(
                   image: (transaction.picture != null)
                       ? NetworkImage(
-                          imageBaseURL + 'w500' + transaction.picture)
-                      : AssetImage('assets/bg_topup.png'),
+                          '${imageBaseURL}w500${transaction.picture}')
+                      : AssetImage('assets/bg_topup.png') as ImageProvider,
                   fit: BoxFit.cover)),
         ),
         Column(

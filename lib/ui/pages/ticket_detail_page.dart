@@ -7,13 +7,12 @@ class TicketDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        context.bloc<PageBloc>().add(GoToMainPage(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (_) {
+        context.read<PageBloc>().add(GoToMainPage(
             bottomNavBarIndex: 1,
-            isExpired: ticket.time.isBefore(DateTime.now())));
-
-        return;
+            isExpired: ticket.time!.isBefore(DateTime.now())));
       },
       child: Scaffold(
           backgroundColor: Color(0xFFF6F7F9),
@@ -32,10 +31,10 @@ class TicketDetailPage extends StatelessWidget {
                           alignment: Alignment.topLeft,
                           child: GestureDetector(
                             onTap: () {
-                              context.bloc<PageBloc>().add(GoToMainPage(
+                              context.read<PageBloc>().add(GoToMainPage(
                                   bottomNavBarIndex: 1,
                                   isExpired:
-                                      ticket.time.isBefore(DateTime.now())));
+                                      ticket.time!.isBefore(DateTime.now())));
                             },
                             child: Icon(
                               Icons.arrow_back,
@@ -56,9 +55,7 @@ class TicketDetailPage extends StatelessWidget {
                       height: 170,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: NetworkImage(imageBaseURL +
-                                  "w500" +
-                                  ticket.movieDetail.backdropPath),
+                              image: NetworkImage("${imageBaseURL}w500${ticket.movieDetail!.backdropPath}"),
                               fit: BoxFit.cover),
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(12),
@@ -74,7 +71,7 @@ class TicketDetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              ticket.movieDetail.title,
+                              ticket.movieDetail?.title ?? '',
                               maxLines: 2,
                               overflow: TextOverflow.clip,
                               style: blackTextFont.copyWith(fontSize: 18),
@@ -83,7 +80,7 @@ class TicketDetailPage extends StatelessWidget {
                               height: 6,
                             ),
                             Text(
-                              ticket.movieDetail.genresAndLanguage,
+                              ticket.movieDetail?.genresAndLanguage ?? '',
                               style: greyTextFont.copyWith(
                                   fontSize: 12, fontWeight: FontWeight.w400),
                             ),
@@ -91,7 +88,7 @@ class TicketDetailPage extends StatelessWidget {
                               height: 6,
                             ),
                             RatingStars(
-                                voteAverage: ticket.movieDetail.voteAverage),
+                                voteAverage: ticket.movieDetail?.voteAverage ?? 0),
                             SizedBox(
                               height: 16,
                             ),
@@ -109,7 +106,7 @@ class TicketDetailPage extends StatelessWidget {
                                   width:
                                       MediaQuery.of(context).size.width * 0.45,
                                   child: Text(
-                                    ticket.theater.name,
+                                    ticket.theater?.name ?? '',
                                     textAlign: TextAlign.end,
                                     style: whiteNumberFont.copyWith(
                                         color: Colors.black,
@@ -132,7 +129,7 @@ class TicketDetailPage extends StatelessWidget {
                                       fontWeight: FontWeight.w400),
                                 ),
                                 Text(
-                                  ticket.time.dateAndTime,
+                                  ticket.time?.dateAndTime ?? '',
                                   style: whiteNumberFont.copyWith(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -246,14 +243,25 @@ class TicketDetailPage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            QrImage(
-                              version: 6,
-                              foregroundColor: Colors.black,
+                            
+
+                            CustomPaint(
+          size: const Size.square(100),
+          painter: QrPainter(
+            data: ticket.bookingCode,
+            version: 6,
                               errorCorrectionLevel: QrErrorCorrectLevel.M,
-                              padding: EdgeInsets.all(0),
-                              size: 100,
-                              data: ticket.bookingCode,
-                            )
+            eyeStyle: const QrEyeStyle(
+              eyeShape: QrEyeShape.square,
+              color: Color(0xff128760),
+            ),
+            dataModuleStyle: const QrDataModuleStyle(
+              dataModuleShape: QrDataModuleShape.circle,
+              color: Color(0xff1a5441),
+            ),
+            // size: 320.0,
+          ),
+        )
                           ],
                         ),
                       ),

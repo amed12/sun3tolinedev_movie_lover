@@ -10,7 +10,7 @@ class TicketPage extends StatefulWidget {
 }
 
 class _TicketPageState extends State<TicketPage> {
-  bool isExpiredTickets;
+  bool? isExpiredTickets;
 
   @override
   void initState() {
@@ -28,15 +28,7 @@ class _TicketPageState extends State<TicketPage> {
           BlocBuilder<TicketBloc, TicketState>(
               builder: (_, ticketState) => Container(
                     margin: EdgeInsets.symmetric(horizontal: defaultMargin),
-                    child: TicketViewer(isExpiredTickets
-                        ? ticketState.tickets
-                            .where((ticket) =>
-                                ticket.time.isBefore(DateTime.now()))
-                            .toList()
-                        : ticketState.tickets
-                            .where((ticket) =>
-                                !ticket.time.isBefore(DateTime.now()))
-                            .toList()),
+                    child: TicketViewer([]),
                   )),
           // note: HEADER
           Container(
@@ -66,14 +58,14 @@ class _TicketPageState extends State<TicketPage> {
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                isExpiredTickets = !isExpiredTickets;
+                                isExpiredTickets = !(isExpiredTickets == true);
                               });
                             },
                             child: Text(
                               "Newest",
                               style: whiteTextFont.copyWith(
                                   fontSize: 16,
-                                  color: !isExpiredTickets
+                                  color: !(isExpiredTickets == true)
                                       ? Colors.white
                                       : Color(0xFF6F678E)),
                             ),
@@ -84,7 +76,7 @@ class _TicketPageState extends State<TicketPage> {
                           Container(
                             height: 4,
                             width: MediaQuery.of(context).size.width * 0.5,
-                            color: !isExpiredTickets
+                            color: !(isExpiredTickets == true)
                                 ? accentColor2
                                 : Colors.transparent,
                           )
@@ -95,14 +87,14 @@ class _TicketPageState extends State<TicketPage> {
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                isExpiredTickets = !isExpiredTickets;
+                                isExpiredTickets = !(isExpiredTickets == true);
                               });
                             },
                             child: Text(
                               "Oldest",
                               style: whiteTextFont.copyWith(
                                   fontSize: 16,
-                                  color: isExpiredTickets
+                                  color: isExpiredTickets == true
                                       ? Colors.white
                                       : Color(0xFF6F678E)),
                             ),
@@ -113,7 +105,7 @@ class _TicketPageState extends State<TicketPage> {
                           Container(
                             height: 4,
                             width: MediaQuery.of(context).size.width * 0.5,
-                            color: isExpiredTickets
+                            color: isExpiredTickets == true
                                 ? accentColor2
                                 : Colors.transparent,
                           )
@@ -161,14 +153,14 @@ class TicketViewer extends StatelessWidget {
   Widget build(BuildContext context) {
     var sortedTickets = tickets;
     sortedTickets
-        .sort((ticket1, ticket2) => ticket1.time.compareTo(ticket2.time));
+        .sort((ticket1, ticket2) => ticket1.time?.compareTo(ticket2.time ?? DateTime.now()) ?? -1);
 
     return ListView.builder(
         itemCount: sortedTickets.length,
         itemBuilder: (_, index) => GestureDetector(
               onTap: () {
                 context
-                    .bloc<PageBloc>()
+                    .read<PageBloc>()
                     .add(GoToTicketDetailPage(sortedTickets[index]));
               },
               child: Container(
@@ -181,9 +173,7 @@ class TicketViewer extends StatelessWidget {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           image: DecorationImage(
-                              image: NetworkImage(imageBaseURL +
-                                  'w500' +
-                                  sortedTickets[index].movieDetail.posterPath),
+                              image: NetworkImage('${imageBaseURL}w500${sortedTickets[index].movieDetail?.posterPath}'),
                               fit: BoxFit.cover)),
                     ),
                     SizedBox(
@@ -198,7 +188,7 @@ class TicketViewer extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              sortedTickets[index].movieDetail.title,
+                              sortedTickets[index].movieDetail?.title  ?? '',
                               style: blackTextFont.copyWith(fontSize: 18),
                               maxLines: 2,
                               overflow: TextOverflow.clip,
@@ -209,7 +199,7 @@ class TicketViewer extends StatelessWidget {
                             Text(
                               sortedTickets[index]
                                   .movieDetail
-                                  .genresAndLanguage,
+                                  ?.genresAndLanguage  ?? '',
                               style: greyTextFont.copyWith(
                                   fontSize: 12, fontWeight: FontWeight.w400),
                             ),
@@ -217,7 +207,7 @@ class TicketViewer extends StatelessWidget {
                               height: 6,
                             ),
                             Text(
-                              sortedTickets[index].theater.name,
+                              sortedTickets[index].theater?.name ?? '',
                               style: greyTextFont.copyWith(
                                   fontSize: 12, fontWeight: FontWeight.w400),
                             )

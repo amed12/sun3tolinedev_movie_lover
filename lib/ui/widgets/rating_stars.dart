@@ -4,7 +4,7 @@ class RatingStars extends StatelessWidget {
   final double voteAverage;
   final double starSize;
   final double fontSize;
-  final Color color;
+  final Color? color;
   final MainAxisAlignment alignment;
 
   RatingStars(

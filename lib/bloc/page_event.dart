@@ -52,21 +52,21 @@ class GoToAccountConfirmationPage extends PageEvent {
 }
 
 class GoToMovieDetailPage extends PageEvent {
-  final Movie movie;
+  final Movie? movie;
 
   GoToMovieDetailPage(this.movie);
 
   @override
-  List<Object> get props => [movie];
+  List<Object?> get props => [movie];
 }
 
 class GoToSelectSchedulePage extends PageEvent {
-  final MovieDetail movieDetail;
+  final MovieDetail? movieDetail;
 
   GoToSelectSchedulePage(this.movieDetail);
 
   @override
-  List<Object> get props => [movieDetail];
+  List<Object?> get props => [movieDetail];
 }
 
 class GoToSelectSeatPage extends PageEvent {
@@ -88,13 +88,13 @@ class GoToCheckoutPage extends PageEvent {
 }
 
 class GoToSuccessPage extends PageEvent {
-  final Ticket ticket;
+  final Ticket? ticket;
   final FlutixTransaction transaction;
 
   GoToSuccessPage(this.ticket, this.transaction);
 
   @override
-  List<Object> get props => [ticket, transaction];
+  List<Object?> get props => [ticket, transaction];
 }
 
 class GoToTicketDetailPage extends PageEvent {

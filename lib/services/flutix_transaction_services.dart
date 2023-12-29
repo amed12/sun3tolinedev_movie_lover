@@ -2,11 +2,11 @@ part of 'services.dart';
 
 class FlutixTransactionServices {
   static CollectionReference transactionCollection =
-      Firestore.instance.collection('transactions');
+      FirebaseFirestore.instance.collection('transactions');
 
   static Future<void> saveTransaction(
       FlutixTransaction flutixTransaction) async {
-    await transactionCollection.document().setData({
+    await transactionCollection.doc().set({
       'userID': flutixTransaction.userID,
       'title': flutixTransaction.title,
       'subtitle': flutixTransaction.subtitle,
@@ -17,19 +17,19 @@ class FlutixTransactionServices {
   }
 
   static Future<List<FlutixTransaction>> getTransaction(String userID) async {
-    QuerySnapshot snapshot = await transactionCollection.getDocuments();
+    QuerySnapshot snapshot = await transactionCollection.get();
 
-    var documents = snapshot.documents
-        .where((document) => document.data['userID'] == userID);
+    var documents = snapshot.docs
+        .where((document) => (document.data() as dynamic)['userID'] == userID);
 
     return documents
         .map((e) => FlutixTransaction(
-            userID: e.data['userID'],
-            title: e.data['title'],
-            subtitle: e.data['subtitle'],
-            time: DateTime.fromMillisecondsSinceEpoch(e.data['time']),
-            amount: e.data['amount'],
-            picture: e.data['picture']))
+            userID: (e.data() as dynamic)['userID'],
+            title: (e.data() as dynamic)['title'],
+            subtitle: (e.data() as dynamic)['subtitle'],
+            time: DateTime.fromMillisecondsSinceEpoch((e.data() as dynamic)['time']),
+            amount: (e.data() as dynamic)['amount'],
+            picture: (e.data() as dynamic)['picture']))
         .toList();
   }
 }

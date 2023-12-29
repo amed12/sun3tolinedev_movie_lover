@@ -1,15 +1,15 @@
 part of 'services.dart';
 
 class AuthServices {
-  static FirebaseAuth _auth = FirebaseAuth.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static Future<SignInSignUpResult> signUp(String email, String password,
       String name, List<String> selectedGenres, String selectedLanguage) async {
     try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
-      User user = result.user.convertToUser(
+      Client user = result.user!.convertToClient(
           name: name,
           selectedGenres: selectedGenres,
           selectedLanguage: selectedLanguage);
@@ -25,10 +25,10 @@ class AuthServices {
   static Future<SignInSignUpResult> signIn(
       String email, String password) async {
     try {
-      AuthResult result = await _auth.signInWithEmailAndPassword(
+      UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
 
-      User user = await result.user.fromFireStore();
+      Client user = await result.user!.fromFireStore();
 
       return SignInSignUpResult(user: user);
     } catch (e) {
@@ -44,12 +44,12 @@ class AuthServices {
     await _auth.sendPasswordResetEmail(email: email);
   }
 
-  static Stream<FirebaseUser> get userStream => _auth.onAuthStateChanged;
+  static get userStream => _auth.authStateChanges;
 }
 
 class SignInSignUpResult {
-  final User user;
-  final String message;
+  final Client? user;
+  final String? message;
 
-  SignInSignUpResult({this.user, this.message});
+  SignInSignUpResult({this.user,  this.message});
 }

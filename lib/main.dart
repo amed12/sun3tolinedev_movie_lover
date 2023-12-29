@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:sun3dev_movielover/firebase_options.dart';
 import 'package:sun3dev_movielover/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +8,11 @@ import 'package:provider/provider.dart';
 import 'bloc/blocs.dart';
 import 'ui/pages/pages.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform
+  );
   runApp(MyApp());
 }
 

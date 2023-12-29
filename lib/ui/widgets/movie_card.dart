@@ -4,25 +4,21 @@ class MovieCard extends StatelessWidget {
   final Movie movie;
   final Function onTap;
 
-  MovieCard(this.movie, {this.onTap});
+  MovieCard(this.movie, {required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (onTap != null) {
-          onTap();
-        }
-      },
+        onTap();
+            },
       child: Container(
         height: 140,
         width: 210,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             image: DecorationImage(
-                image: NetworkImage(imageBaseURL +
-                    "w780" +
-                    (movie.backdropPath ?? movie.posterPath)),
+                image: NetworkImage("${imageBaseURL}w780${movie.backdropPath ?? movie.posterPath}"),
                 fit: BoxFit.cover)),
         child: Container(
           height: 140,

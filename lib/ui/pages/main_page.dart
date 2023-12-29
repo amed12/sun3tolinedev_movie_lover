@@ -11,8 +11,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int bottomNavBarIndex;
-  PageController pageController;
+  late int bottomNavBarIndex;
+  late PageController pageController;
 
   @override
   void initState() {
@@ -67,7 +67,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
                   onPressed: () {
-                    context.bloc<PageBloc>().add(GoToTopUpPage(GoToMainPage()));
+                    context.read<PageBloc>().add(GoToTopUpPage(GoToMainPage()));
                   }),
             ),
           )
@@ -89,6 +89,8 @@ class _MainPageState extends State<MainPage> {
                     topRight: Radius.circular(20))),
             child: BottomNavigationBar(
                 elevation: 0,
+                selectedLabelStyle: GoogleFonts.raleway(
+                              fontSize: 13, fontWeight: FontWeight.w600),
                 backgroundColor: Colors.transparent,
                 selectedItemColor: mainColor,
                 unselectedItemColor: Color(0xFFE5E5E5),
@@ -101,9 +103,7 @@ class _MainPageState extends State<MainPage> {
                 },
                 items: [
                   BottomNavigationBarItem(
-                      title: Text("New Movies",
-                          style: GoogleFonts.raleway(
-                              fontSize: 13, fontWeight: FontWeight.w600)),
+                      label: "New Movies",
                       icon: Container(
                         margin: EdgeInsets.only(bottom: 6),
                         height: 20,
@@ -112,9 +112,7 @@ class _MainPageState extends State<MainPage> {
                             : "assets/ic_movie_grey.png"),
                       )),
                   BottomNavigationBarItem(
-                      title: Text("My Tickets",
-                          style: GoogleFonts.raleway(
-                              fontSize: 13, fontWeight: FontWeight.w600)),
+                      label: "My Tickets",
                       icon: Container(
                         margin: EdgeInsets.only(bottom: 6),
                         height: 20,

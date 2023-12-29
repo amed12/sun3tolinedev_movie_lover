@@ -15,17 +15,15 @@ class _TopUpPageState extends State<TopUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    context.bloc<ThemeBloc>().add(
+    context.read<ThemeBloc>().add(
         ChangeTheme(ThemeData().copyWith(primaryColor: Color(0xFFE4E4E4))));
 
     double cardWidth =
         (MediaQuery.of(context).size.width - 2 * defaultMargin - 40) / 3;
 
-    return WillPopScope(
-      onWillPop: () async {
-        context.bloc<PageBloc>().add(widget.pageEvent);
-
-        return;
+    return PopScope(
+      onPopInvoked: (_) async {
+        context.read<PageBloc>().add(widget.pageEvent);
       },
       child: Scaffold(
         body: ListView(
@@ -38,7 +36,7 @@ class _TopUpPageState extends State<TopUpPage> {
                   margin: EdgeInsets.only(top: 20, left: defaultMargin),
                   child: GestureDetector(
                       onTap: () {
-                        context.bloc<PageBloc>().add(widget.pageEvent);
+                        context.read<PageBloc>().add(widget.pageEvent);
                       },
                       child: Icon(Icons.arrow_back, color: Colors.black)),
                 )),
@@ -145,10 +143,14 @@ class _TopUpPageState extends State<TopUpPage> {
                         width: 250,
                         height: 46,
                         child: BlocBuilder<UserBloc, UserState>(
-                          builder: (_, userState) => RaisedButton(
-                              elevation: 0,
+                          builder: (_, userState) => ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: 0,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8)),
+                                  disabledBackgroundColor: Color(0xFFE4E4E4),
+                              backgroundColor: Color(0xFF3E9D9D),
+                              ),
                               child: Text(
                                 "Top Up My Wallet",
                                 style: whiteTextFont.copyWith(
@@ -157,11 +159,9 @@ class _TopUpPageState extends State<TopUpPage> {
                                         ? Colors.white
                                         : Color(0xFFBEBEBE)),
                               ),
-                              disabledColor: Color(0xFFE4E4E4),
-                              color: Color(0xFF3E9D9D),
                               onPressed: (selectedAmount > 0)
                                   ? () {
-                                      context.bloc<PageBloc>().add(GoToSuccessPage(
+                                      context.read<PageBloc>().add(GoToSuccessPage(
                                           null,
                                           FlutixTransaction(
                                               userID: (userState as UserLoaded)
@@ -190,7 +190,7 @@ class _TopUpPageState extends State<TopUpPage> {
     );
   }
 
-  MoneyCard makeMoneyCard({int amount, double width}) {
+  MoneyCard makeMoneyCard({required int amount, required double width}) {
     return MoneyCard(
       amount: amount,
       width: width,

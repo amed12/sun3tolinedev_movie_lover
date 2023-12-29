@@ -5,7 +5,7 @@ class DateCard extends StatelessWidget {
   final double width;
   final double height;
   final DateTime date;
-  final Function onTap;
+  final Function? onTap;
 
   DateCard(this.date,
       {this.isSelected = false, this.width = 70, this.height = 90, this.onTap});
@@ -14,10 +14,9 @@ class DateCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (onTap != null) {
-          onTap();
-        }
-      },
+        if(onTap == null)return;
+        onTap!();
+            },
       child: Container(
         width: width,
         height: height,

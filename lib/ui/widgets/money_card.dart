@@ -4,7 +4,7 @@ class MoneyCard extends StatelessWidget {
   final double width;
   final bool isSelected;
   final int amount;
-  final Function onTap;
+  final Function? onTap;
 
   MoneyCard(
       {this.isSelected = false, this.amount = 0, this.onTap, this.width = 90});
@@ -14,7 +14,7 @@ class MoneyCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (onTap != null) {
-          onTap();
+          onTap!();
         }
       },
       child: Container(

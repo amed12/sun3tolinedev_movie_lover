@@ -34,16 +34,18 @@ class SplashPage extends StatelessWidget {
                 width: 250,
                 height: 46,
                 margin: EdgeInsets.only(top: 70, bottom: 19),
-                child: RaisedButton(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: mainColor
+                  ),
                     child: Text(
                       "Get Started",
                       style: whiteTextFont.copyWith(fontSize: 16),
                     ),
-                    color: mainColor,
                     onPressed: () {
                       context
-                          .bloc<PageBloc>()
-                          .add(GoToRegistrationPage(RegistrationData()));
+                          .read<PageBloc>()
+                          .add(GoToRegistrationPage(RegistrationData(profileImage: null)));
                     }),
               ),
               Row(
@@ -55,7 +57,7 @@ class SplashPage extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      context.bloc<PageBloc>().add(GoToLoginPage());
+                      context.read<PageBloc>().add(GoToLoginPage());
                     },
                     child: Text(
                       "Sign In",

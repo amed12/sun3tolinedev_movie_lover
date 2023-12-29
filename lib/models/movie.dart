@@ -6,15 +6,15 @@ class Movie extends Equatable {
   final double voteAverage;
   final String overview;
   final String posterPath;
-  final String backdropPath;
+  final String? backdropPath;
 
   Movie(
-      {@required this.id,
-      @required this.title,
-      @required this.voteAverage,
-      @required this.overview,
-      @required this.posterPath,
-      @required this.backdropPath});
+      {required this.id,
+      required this.title,
+      required this.voteAverage,
+      required this.overview,
+      required this.posterPath,
+      required this.backdropPath});
 
   factory Movie.fromJson(Map<String, dynamic> json) => Movie(
       id: json['id'],
@@ -26,5 +26,5 @@ class Movie extends Equatable {
 
   @override
   List<Object> get props =>
-      [id, title, voteAverage, overview, posterPath, backdropPath];
+      [id, title, voteAverage, overview, posterPath, backdropPath ?? ''];
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "402179568585",
+    "project_id": "movieloverv2",
+    "storage_bucket": "movieloverv2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:402179568585:android:7a3da62307787813f3ee18",
+        "android_client_info": {
+          "package_name": "com.example.sun3toline_dev_movielover"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsPDL1XYwZNZtMpa0ajk79ETNP9m0yurY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

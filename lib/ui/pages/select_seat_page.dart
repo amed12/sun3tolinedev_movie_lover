@@ -14,13 +14,11 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async {
+    return PopScope(
+        onPopInvoked: (_) async {
           context
-              .bloc<PageBloc>()
+              .read<PageBloc>()
               .add(GoToSelectSchedulePage(widget.ticket.movieDetail));
-
-          return;
         },
         child: Scaffold(
             body: Stack(
@@ -43,7 +41,7 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
                           padding: EdgeInsets.all(1),
                           child: GestureDetector(
                             onTap: () {
-                              context.bloc<PageBloc>().add(
+                              context.read<PageBloc>().add(
                                   GoToSelectSchedulePage(
                                       widget.ticket.movieDetail));
                             },
@@ -63,7 +61,7 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.5,
                                   child: Text(
-                                    widget.ticket.movieDetail.title,
+                                    widget.ticket.movieDetail?.title ?? '',
                                     style: blackTextFont.copyWith(fontSize: 20),
                                     maxLines: 2,
                                     overflow: TextOverflow.clip,
@@ -75,10 +73,8 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
                                     image: DecorationImage(
-                                        image: NetworkImage(imageBaseURL +
-                                            'w154' +
-                                            widget
-                                                .ticket.movieDetail.posterPath),
+                                        image: NetworkImage('${imageBaseURL}w154${widget
+                                                .ticket.movieDetail?.posterPath}'),
                                         fit: BoxFit.cover)),
                               )
                             ],
@@ -116,7 +112,7 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
                           ),
                           onPressed: selectedSeats.length > 0
                               ? () {
-                                  context.bloc<PageBloc>().add(GoToCheckoutPage(
+                                  context.read<PageBloc>().add(GoToCheckoutPage(
                                       widget.ticket
                                           .copyWith(seats: selectedSeats)));
                                 }

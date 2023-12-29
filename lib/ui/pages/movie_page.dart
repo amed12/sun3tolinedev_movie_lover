@@ -16,11 +16,11 @@ class MoviePage extends StatelessWidget {
           child: BlocBuilder<UserBloc, UserState>(builder: (_, userState) {
             if (userState is UserLoaded) {
               if (imageFileToUpload != null) {
-                uploadImage(imageFileToUpload).then((downloadURL) {
+                uploadImage(imageFileToUpload!).then((downloadURL) {
                   imageFileToUpload = null;
                   context
-                      .bloc<UserBloc>()
-                      .add(UpdateData(profileImage: downloadURL));
+                      .read<UserBloc>()
+                      .add(UpdateData(profileImage: downloadURL, name: ''));
                 });
               }
 
@@ -28,7 +28,7 @@ class MoviePage extends StatelessWidget {
                 children: <Widget>[
                   GestureDetector(
                     onTap: () {
-                      context.bloc<PageBloc>().add(GoToProfilePage());
+                      context.read<PageBloc>().add(GoToProfilePage());
                     },
                     child: Container(
                       padding: EdgeInsets.all(5),
@@ -49,9 +49,9 @@ class MoviePage extends StatelessWidget {
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                     image: (userState.user.profilePicture == ""
-                                        ? AssetImage("assets/user_pic.png")
+                                        ? AssetImage("assets/user_pic.png") as ImageProvider
                                         : NetworkImage(
-                                            userState.user.profilePicture)),
+                                            userState.user.profilePicture ?? '')),
                                     fit: BoxFit.cover)),
                           )
                         ],
@@ -69,7 +69,7 @@ class MoviePage extends StatelessWidget {
                             2 * defaultMargin -
                             78,
                         child: Text(
-                          userState.user.name,
+                          userState.user.name ?? '',
                           style: whiteTextFont.copyWith(fontSize: 18),
                           maxLines: 1,
                           overflow: TextOverflow.clip,
@@ -78,7 +78,7 @@ class MoviePage extends StatelessWidget {
                       GestureDetector(
                         onTap: () {
                           context
-                              .bloc<PageBloc>()
+                              .read<PageBloc>()
                               .add(GoToWalletPage(GoToMainPage()));
                         },
                         child: Text(
@@ -133,7 +133,7 @@ class MoviePage extends StatelessWidget {
                             movies[index],
                             onTap: () {
                               context
-                                  .bloc<PageBloc>()
+                                  .read<PageBloc>()
                                   .add(GoToMovieDetailPage(movies[index]));
                             },
                           ),
@@ -165,9 +165,9 @@ class MoviePage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(
-                      userState.user.selectedGenres.length,
+                      userState.user.selectedGenres?.length ?? 0,
                       (index) =>
-                          BrowseButton(userState.user.selectedGenres[index])),
+                          BrowseButton(userState.user.selectedGenres![index])),
                 ),
               );
             } else {

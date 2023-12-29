@@ -15,12 +15,12 @@ class _AccountConfirmationPageState extends State<AccountConfirmationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (_) async {
         context
-            .bloc<PageBloc>()
+            .read<PageBloc>()
             .add(GoToPreferencePage(widget.registrationData));
-        return;
       },
       child: Scaffold(
         body: Container(
@@ -39,7 +39,7 @@ class _AccountConfirmationPageState extends State<AccountConfirmationPage> {
                           alignment: Alignment.centerLeft,
                           child: GestureDetector(
                             onTap: () {
-                              context.bloc<PageBloc>().add(GoToSplashPage());
+                              context.read<PageBloc>().add(GoToSplashPage());
                             },
                             child: Icon(Icons.arrow_back, color: Colors.black),
                           ),
@@ -63,9 +63,9 @@ class _AccountConfirmationPageState extends State<AccountConfirmationPage> {
                         image: DecorationImage(
                             image:
                                 (widget.registrationData.profileImage == null)
-                                    ? AssetImage("assets/user_pic.png")
+                                    ? AssetImage("assets/user_pic.png") as ImageProvider
                                     : FileImage(
-                                        widget.registrationData.profileImage),
+                                        widget.registrationData.profileImage!),
                             fit: BoxFit.cover)),
                   ),
                   Text(
@@ -89,10 +89,12 @@ class _AccountConfirmationPageState extends State<AccountConfirmationPage> {
                       : SizedBox(
                           width: 250,
                           height: 45,
-                          child: RaisedButton(
-                              color: Color(0xFF3E9D9D),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF3E9D9D),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
+                                  borderRadius: BorderRadius.circular(8))
+                            ),
                               child: Text(
                                 "Create My Account",
                                 style: whiteTextFont.copyWith(fontSize: 16),

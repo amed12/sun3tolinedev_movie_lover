@@ -6,7 +6,7 @@ class CheckoutPage extends StatefulWidget {
   CheckoutPage(this.ticket);
 
   @override
-  _CheckoutPageState createState() => _CheckoutPageState();
+  State<CheckoutPage> createState() => _CheckoutPageState();
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
@@ -14,12 +14,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget build(BuildContext context) {
     int total = 26500 * widget.ticket.seats.length;
 
-    return WillPopScope(
-        onWillPop: () async {
-          context.bloc<PageBloc>().add(GoToSelectSeatPage(widget.ticket));
-
-          return;
-        },
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (_) {
+        context.read<PageBloc>().add(GoToSelectSeatPage(widget.ticket));
+      },
         child: Scaffold(
           body: Stack(
             children: <Widget>[
@@ -44,7 +43,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             child: GestureDetector(
                               onTap: () {
                                 context
-                                    .bloc<PageBloc>()
+                                    .read<PageBloc>()
                                     .add(GoToSelectSeatPage(widget.ticket));
                               },
                               child: Icon(
@@ -57,7 +56,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                       BlocBuilder<UserBloc, UserState>(
                         builder: (_, userState) {
-                          User user = (userState as UserLoaded).user;
+                          Client user = (userState as UserLoaded).user;
 
                           return Column(
                             children: <Widget>[
@@ -81,10 +80,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         image: DecorationImage(
-                                            image: NetworkImage(imageBaseURL +
-                                                'w342' +
-                                                widget.ticket.movieDetail
-                                                    .posterPath),
+                                            image: NetworkImage('${imageBaseURL}w342${widget.ticket.movieDetail
+                                                    ?.posterPath}'),
                                             fit: BoxFit.cover)),
                                   ),
                                   Column(
@@ -99,7 +96,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               70 -
                                               20,
                                           child: Text(
-                                            widget.ticket.movieDetail.title,
+                                            widget.ticket.movieDetail?.title ?? '',
                                             style: blackTextFont.copyWith(
                                                 fontSize: 18),
                                             maxLines: 2,
@@ -115,7 +112,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             EdgeInsets.symmetric(vertical: 6),
                                         child: Text(
                                           widget.ticket.movieDetail
-                                              .genresAndLanguage,
+                                              ?.genresAndLanguage ?? '',
                                           style: greyTextFont.copyWith(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400),
@@ -123,7 +120,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       ),
                                       RatingStars(
                                         voteAverage: widget
-                                            .ticket.movieDetail.voteAverage,
+                                            .ticket.movieDetail?.voteAverage ?? 0,
                                         color: accentColor3,
                                       )
                                     ],
@@ -177,7 +174,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       width: MediaQuery.of(context).size.width *
                                           0.55,
                                       child: Text(
-                                        widget.ticket.theater.name,
+                                        widget.ticket.theater?.name ?? '',
                                         textAlign: TextAlign.end,
                                         style: whiteNumberFont.copyWith(
                                             color: Colors.black,
@@ -203,7 +200,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             fontSize: 16,
                                             fontWeight: FontWeight.w400)),
                                     Text(
-                                      widget.ticket.time.dateAndTime,
+                                      widget.ticket.time?.dateAndTime ?? '',
                                       style: whiteNumberFont.copyWith(
                                           color: Colors.black,
                                           fontSize: 16,
@@ -343,7 +340,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               symbol: 'IDR ')
                                           .format(user.balance),
                                       style: whiteNumberFont.copyWith(
-                                          color: user.balance >= total
+                                          color: (user.balance ?? 0) >= total
                                               ? Color(0xFF3E9D9D)
                                               : Color(0xFFFF5C83),
                                           fontSize: 16,
@@ -356,41 +353,43 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 width: 250,
                                 height: 46,
                                 margin: EdgeInsets.only(top: 36, bottom: 50),
-                                child: RaisedButton(
-                                    elevation: 0,
-                                    color: user.balance >= total
-                                        ? Color(0xFF3E9D9D)
-                                        : mainColor,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8)),
+                                child: ElevatedButton(
                                     child: Text(
-                                      user.balance >= total
+                                      (user.balance ?? 0) >= total
                                           ? "Checkout Now"
                                           : "Top Up My Wallet",
                                       style:
                                           whiteTextFont.copyWith(fontSize: 16),
                                     ),
                                     onPressed: () {
-                                      if (user.balance >= total) {
+                                      if ((user.balance ?? 0) >= total) {
                                         FlutixTransaction transaction =
                                             FlutixTransaction(
                                                 userID: user.id,
                                                 title: widget
-                                                    .ticket.movieDetail.title,
+                                                    .ticket.movieDetail?.title ?? '',
                                                 subtitle:
-                                                    widget.ticket.theater.name,
+                                                    widget.ticket.theater?.name ?? '',
                                                 time: DateTime.now(),
                                                 amount: -total,
                                                 picture: widget.ticket
-                                                    .movieDetail.posterPath);
+                                                    .movieDetail?.posterPath);
 
-                                        context.bloc<PageBloc>().add(
+                                        context.read<PageBloc>().add(
                                             GoToSuccessPage(
-                                                widget.ticket.copyWith(totalPrice: total), transaction));
+                                                widget.ticket.copyWith(totalPrice: total, movieDetail: null), transaction));
                                       } else {
                                         // # Uang tidak cukup
                                       }
-                                    }),
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                    backgroundColor: (user.balance ?? 0) >= total
+                                        ? Color(0xFF3E9D9D)
+                                        : mainColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8)),
+                                    )),
                               )
                             ],
                           );

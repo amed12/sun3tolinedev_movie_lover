@@ -30,14 +30,12 @@ class _PreferencePageState extends State<PreferencePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (_) async {
         widget.registrationData.password = "";
-
         context
-            .bloc<PageBloc>()
+            .read<PageBloc>()
             .add(GoToRegistrationPage(widget.registrationData));
-        return;
       },
       child: Scaffold(
         body: Container(
@@ -55,7 +53,7 @@ class _PreferencePageState extends State<PreferencePage> {
                         onTap: () {
                           widget.registrationData.password = "";
 
-                          context.bloc<PageBloc>().add(
+                          context.read<PageBloc>().add(
                               GoToRegistrationPage(widget.registrationData));
                         },
                         child: Icon(Icons.arrow_back)),
@@ -109,7 +107,7 @@ class _PreferencePageState extends State<PreferencePage> {
                             widget.registrationData.selectedLang =
                                 selectedLanguage;
 
-                            context.bloc<PageBloc>().add(
+                            context.read<PageBloc>().add(
                                 GoToAccountConfirmationPage(
                                     widget.registrationData));
                           }

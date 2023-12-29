@@ -1,7 +1,7 @@
 part of 'extensions.dart';
 
 extension FirebaseUserExtension on User {
-  Client convertToUser(
+  Client convertToClient(
           {String name = "No Name",
           List<String> selectedGenres = const [],
           String selectedLanguage = "English",

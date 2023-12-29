@@ -57,21 +57,21 @@ class OnAccountConfirmationPage extends PageState {
 }
 
 class OnMovieDetailPage extends PageState {
-  final Movie movie;
+  final Movie? movie;
 
   OnMovieDetailPage(this.movie);
 
   @override
-  List<Object> get props => [movie];
+  List<Object?> get props => [movie];
 }
 
 class OnSelectSchedulePage extends PageState {
-  final MovieDetail movieDetail;
+  final MovieDetail? movieDetail;
 
   OnSelectSchedulePage(this.movieDetail);
 
   @override
-  List<Object> get props => [movieDetail];
+  List<Object?> get props => [movieDetail];
 }
 
 class OnSelectSeatPage extends PageState {
@@ -93,13 +93,13 @@ class OnCheckoutPage extends PageState {
 }
 
 class OnSuccessPage extends PageState {
-  final Ticket ticket;
+  final Ticket? ticket;
   final FlutixTransaction transaction;
 
   OnSuccessPage(this.ticket, this.transaction);
 
   @override
-  List<Object> get props => [ticket, transaction];
+  List<Object?> get props => [ticket, transaction];
 }
 
 class OnTicketDetailPage extends PageState {

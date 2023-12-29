@@ -1,9 +1,9 @@
-import 'package:bwa_flutix/models/models.dart';
+import 'package:sun3dev_movielover/models/models.dart';
 import 'package:flutter/material.dart';
-import 'package:bwa_flutix/shared/shared.dart';
+import 'package:sun3dev_movielover/shared/shared.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:bwa_flutix/extensions/extensions.dart';
+import 'package:sun3dev_movielover/extensions/extensions.dart';
 
 part 'selectable_box.dart';
 part 'movie_card.dart';

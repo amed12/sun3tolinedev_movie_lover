@@ -26,14 +26,12 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     context
-        .bloc<ThemeBloc>()
+        .read<ThemeBloc>()
         .add(ChangeTheme(ThemeData().copyWith(primaryColor: accentColor1)));
 
-    return WillPopScope(
-      onWillPop: () async {
-        context.bloc<PageBloc>().add(GoToSplashPage());
-
-        return;
+    return PopScope(
+      onPopInvoked: (_) async {
+        context.read<PageBloc>().add(GoToSplashPage());
       },
       child: Scaffold(
         body: Container(
@@ -52,7 +50,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           alignment: Alignment.centerLeft,
                           child: GestureDetector(
                             onTap: () {
-                              context.bloc<PageBloc>().add(GoToSplashPage());
+                              context.read<PageBloc>().add(GoToSplashPage());
                             },
                             child: Icon(Icons.arrow_back, color: Colors.black),
                           ),
@@ -81,9 +79,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                   image: (widget
                                               .registrationData.profileImage ==
                                           null)
-                                      ? AssetImage("assets/user_pic.png")
+                                      ? AssetImage("assets/user_pic.png") as ImageProvider
                                       : FileImage(
-                                          widget.registrationData.profileImage),
+                                          widget.registrationData.profileImage!),
                                   fit: BoxFit.cover)),
                         ),
                         Align(
@@ -92,8 +90,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             onTap: () async {
                               if (widget.registrationData.profileImage ==
                                   null) {
-                                widget.registrationData.profileImage =
-                                    await getImage();
+                                var image = await getImage();
+                                widget.registrationData.profileImage = File(image?.path ?? '');
                               } else {
                                 widget.registrationData.profileImage = null;
                               }
@@ -211,7 +209,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               passwordController.text;
 
                           context
-                              .bloc<PageBloc>()
+                              .read<PageBloc>()
                               .add(GoToPreferencePage(widget.registrationData));
                         }
                       })

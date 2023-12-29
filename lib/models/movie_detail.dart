@@ -4,7 +4,7 @@ class MovieDetail extends Movie {
   final List<String> genres;
   final String language;
 
-  MovieDetail(Movie movie, {this.genres, this.language})
+  MovieDetail(Movie movie, {required this.genres, required this.language})
       : super(
             id: movie.id,
             title: movie.title,

@@ -1,20 +1,19 @@
 part of 'pages.dart';
 
 class MovieDetailPage extends StatelessWidget {
-  final Movie movie;
+  final Movie? movie;
 
   MovieDetailPage(this.movie);
 
   @override
   Widget build(BuildContext context) {
-    MovieDetail movieDetail;
-    List<Credit> credits;
+    MovieDetail? movieDetail;
+    List<Credit>? credits;
 
-    return WillPopScope(
-      onWillPop: () async {
-        context.bloc<PageBloc>().add(GoToMainPage());
-
-        return;
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (_) async {
+        context.read<PageBloc>().add(GoToMainPage());
       },
       child: Scaffold(
           body: Stack(
@@ -31,8 +30,8 @@ class MovieDetailPage extends StatelessWidget {
               FutureBuilder(
                   future: MovieServices.getDetails(movie),
                   builder: (_, snapshot) {
-                    if (snapshot.hasData) {
-                      movieDetail = snapshot.data;
+                    if (snapshot.hasData is MovieDetail && snapshot.hasData == true) {
+                      movieDetail = snapshot.data as MovieDetail?;
                     }
 
                     return Column(
@@ -46,10 +45,7 @@ class MovieDetailPage extends StatelessWidget {
                                   height: 270,
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
-                                          image: NetworkImage(imageBaseURL +
-                                                  "w1280" +
-                                                  movie.backdropPath ??
-                                              movie.posterPath),
+                                          image: NetworkImage("${imageBaseURL}w1280${movie?.backdropPath}"),
                                           fit: BoxFit.cover)),
                                 ),
                                 Container(
@@ -76,7 +72,7 @@ class MovieDetailPage extends StatelessWidget {
                                   color: Colors.black.withOpacity(0.04)),
                               child: GestureDetector(
                                 onTap: () {
-                                  context.bloc<PageBloc>().add(GoToMainPage());
+                                  context.read<PageBloc>().add(GoToMainPage());
                                 },
                                 child: Icon(
                                   Icons.arrow_back,
@@ -91,7 +87,7 @@ class MovieDetailPage extends StatelessWidget {
                           margin: EdgeInsets.fromLTRB(
                               defaultMargin, 16, defaultMargin, 6),
                           child: Text(
-                            movie.title,
+                            movie?.title ?? '',
                             textAlign: TextAlign.center,
                             style: blackTextFont.copyWith(fontSize: 24),
                           ),
@@ -99,7 +95,7 @@ class MovieDetailPage extends StatelessWidget {
                         // note: GENRE
                         (snapshot.hasData)
                             ? Text(
-                                movieDetail.genresAndLanguage,
+                                movieDetail?.genresAndLanguage ?? '',
                                 style: greyTextFont.copyWith(
                                     fontSize: 12, fontWeight: FontWeight.w400),
                               )
@@ -115,7 +111,7 @@ class MovieDetailPage extends StatelessWidget {
                         ),
                         // note: RATING
                         RatingStars(
-                          voteAverage: movie.voteAverage,
+                          voteAverage: movie?.voteAverage ?? 0,
                           color: accentColor3,
                           alignment: MainAxisAlignment.center,
                         ),
@@ -134,25 +130,25 @@ class MovieDetailPage extends StatelessWidget {
                               )),
                         ),
                         FutureBuilder(
-                            future: MovieServices.getCredits(movie.id),
+                            future: MovieServices.getCredits(movie?.id ?? 0),
                             builder: (_, snapshot) {
                               if (snapshot.hasData) {
-                                credits = snapshot.data;
+                                credits = snapshot.data as List<Credit>?;
                                 return SizedBox(
                                   height: 115,
                                   child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: credits.length,
+                                      itemCount: credits?.length,
                                       itemBuilder: (_, index) => Container(
                                           margin: EdgeInsets.only(
                                               left: (index == 0)
                                                   ? defaultMargin
                                                   : 0,
                                               right:
-                                                  (index == credits.length - 1)
+                                                  (index == credits!.length - 1)
                                                       ? defaultMargin
                                                       : 16),
-                                          child: CreditCard(credits[index]))),
+                                          child: CreditCard(credits![index]))),
                                 );
                               } else {
                                 return SizedBox(
@@ -178,23 +174,24 @@ class MovieDetailPage extends StatelessWidget {
                           margin: EdgeInsets.fromLTRB(
                               defaultMargin, 0, defaultMargin, 30),
                           child: Text(
-                            movie.overview,
+                            movie?.overview ?? '',
                             style: greyTextFont.copyWith(
                                 fontWeight: FontWeight.w400),
                           ),
                         ),
                         // note: BUTTON
-                        RaisedButton(
-                            shape: RoundedRectangleBorder(
+                        ElevatedButton(
+                            style : ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
-                            color: mainColor,
-                            child: Text(
+                            backgroundColor: mainColor
+                            ),child: Text(
                               "Continue to Book",
                               style: whiteTextFont.copyWith(fontSize: 16),
                             ),
                             onPressed: () {
                               context
-                                  .bloc<PageBloc>()
+                                  .read<PageBloc>()
                                   .add(GoToSelectSchedulePage(movieDetail));
                             }),
                         SizedBox(height: defaultMargin)

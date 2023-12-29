@@ -6,7 +6,7 @@ class RegistrationData {
   String password;
   List<String> selectedGenres;
   String selectedLang;
-  File profileImage;
+  File? profileImage;
 
   RegistrationData(
       {this.name = "",
@@ -14,5 +14,5 @@ class RegistrationData {
       this.password = "",
       this.selectedGenres = const [],
       this.selectedLang = "",
-      this.profileImage});
+      required this.profileImage});
 }
