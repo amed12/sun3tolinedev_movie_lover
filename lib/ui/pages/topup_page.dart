@@ -142,7 +142,9 @@ class _TopUpPageState extends State<TopUpPage> {
                       SizedBox(
                         width: 250,
                         height: 46,
-                        child: BlocBuilder<UserBloc, UserState>(
+                        child: 
+                        const Text("halo")
+                        /*BlocBuilder<UserBloc, UserState>(
                           builder: (_, userState) => ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,
@@ -174,7 +176,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                               time: DateTime.now())));
                                     }
                                   : null),
-                        ),
+                        ), */
                       ),
                       SizedBox(
                         height: 100,

@@ -259,10 +259,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                                 File(profileImageFile?.path ?? ''));
                                           }
 
-                                          context.read<UserBloc>().add(
-                                              UpdateData(
-                                                  name: nameController.text,
-                                                  profileImage: profilePath));
+                                          // context.read<UserBloc>().add(
+                                          //     UpdateData(
+                                          //         name: nameController.text,
+                                          //         profileImage: profilePath));
 
                                           context
                                               .read<PageBloc>()

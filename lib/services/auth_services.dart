@@ -45,6 +45,8 @@ class AuthServices {
   }
 
   static get userStream => _auth.authStateChanges;
+
+  static get userChanges => _auth.userChanges();
 }
 
 class SignInSignUpResult {

@@ -15,10 +15,10 @@ class UserServices {
     });
   }
 
-  static Future<Client> getUser(String id) async {
+  static Future<Client> getUser(String? id) async {
     DocumentSnapshot snapshot = await _userCollection.doc(id).get();
 
-    return Client(id, snapshot.get('email'),
+    return Client(id ?? '', snapshot.get('email'),
         balance: snapshot.get('balance'),
         profilePicture: snapshot.get('profilePicture'),
         selectedGenres: (snapshot.get('selectedGenres') as List)

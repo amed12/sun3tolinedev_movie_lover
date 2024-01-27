@@ -54,10 +54,6 @@ class PageBloc extends Bloc<PageEvent, PageState> {
       emit(OnProfilePage());
     });
 
-    on<GoToProfilePage>((event, emit)  {
-      emit(OnProfilePage());
-    });
-
     on<GoToTopUpPage>((event, emit)  {
       emit(OnTopUpPage(event.pageEvent));
     });

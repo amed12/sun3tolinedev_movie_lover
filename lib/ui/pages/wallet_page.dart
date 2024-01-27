@@ -38,7 +38,7 @@ class WalletPage extends StatelessWidget {
                             child: Icon(Icons.arrow_back, color: Colors.black),
                           ),
                         ),
-                        BlocBuilder<UserBloc, UserState>(
+                        /* BlocBuilder<UserBloc, UserState>(
                           builder: (_, userState) => Column(
                             children: <Widget>[
                               SizedBox(
@@ -243,7 +243,7 @@ class WalletPage extends StatelessWidget {
                               )
                             ],
                           ),
-                        )
+                        ) */
                       ],
                     )
                   ],

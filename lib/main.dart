@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sun3dev_movielover/firebase_options.dart';
 import 'package:sun3dev_movielover/services/services.dart';
@@ -19,13 +20,15 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider.value(
-      value: AuthServices.userStream,
+    return StreamProvider<User?>(
+      create: (_) {
+        return AuthServices.userChanges;
+      },
       initialData: null,
       child: MultiBlocProvider(
           providers: [
             BlocProvider(create: (_) => PageBloc()),
-            BlocProvider(create: (_) => UserBloc()),
+            // BlocProvider(create: (_) => UserBloc()),
             BlocProvider(create: (_) => ThemeBloc()),
             BlocProvider(
               create: (_) => MovieBloc()..add(FetchMovies()),

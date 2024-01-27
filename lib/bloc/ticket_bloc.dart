@@ -19,7 +19,7 @@ class TicketBloc extends Bloc<TicketEvent, TicketState> {
     });
 
     on<GetTickets>((event, emit) async {
-     List<Ticket> tickets = await TicketServices.getTickets(event.userID);
+     List<Ticket> tickets = await TicketServices.getTickets(event.userID ?? '');
       emit(TicketState(tickets));
     });
   }

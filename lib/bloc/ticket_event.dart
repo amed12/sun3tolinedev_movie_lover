@@ -5,12 +5,12 @@ abstract class TicketEvent extends Equatable {
 }
 
 class GetTickets extends TicketEvent {
-  final String userID;
+  final String? userID;
 
   GetTickets(this.userID);
 
   @override
-  List<Object> get props => [userID];
+  List<Object?> get props => [userID];
 }
 
 class BuyTicket extends TicketEvent {

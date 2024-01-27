@@ -3,11 +3,11 @@ part of 'pages.dart';
 class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    User firebaseUser = Provider.of<User>(context);
+    // User? firebaseUser = Provider.of<User?>(context);
 
     if (prevPageEvent is! GoToMainPage) {
-      context.read<UserBloc>().add(LoadUser(firebaseUser.uid));
-      context.read<TicketBloc>().add(GetTickets(firebaseUser.uid));
+      // context.read<UserBloc>().add(LoadUser(firebaseUser?.uid));
+      // context.read<TicketBloc>().add(GetTickets(firebaseUser?.uid));
 
       prevPageEvent = GoToMainPage();
       context.read<PageBloc>().add(prevPageEvent!);
